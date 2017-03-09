@@ -1,1 +1,0 @@
-# scannerCOP4020
