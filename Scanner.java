@@ -33,9 +33,9 @@ public class Scanner{
         }
     }
 
-    /*
+
     public void scanner(){
-        String lexeme;
+        Lexeme lexeme;
         lexeme = lex();
         while(lexeme.type != END){
             lexeme.display();
@@ -85,7 +85,6 @@ public class Scanner{
         }
         return new Lexeme(BAD_CHARACTER, ch);
     }
-    */
 
     public static void confirmArgs(String[] args){
         if(args.length != 2){
