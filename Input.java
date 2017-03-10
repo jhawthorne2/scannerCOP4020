@@ -2,7 +2,9 @@ public class Input{
     public char getCharacter(){
 
     }
-    public void failed(){
+
+    // Return true if failed
+    public boolean failed(){
 
     }
     public void pushback(){

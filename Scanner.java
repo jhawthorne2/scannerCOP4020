@@ -48,7 +48,7 @@ public class Scanner{
         char ch;
         skipWhiteSpace();
         ch = Input.getCharacter();
-        if(Input.failed)
+        if(Input.failed())
             return new Lexeme(END);
         switch(ch){
             // single character tokens
