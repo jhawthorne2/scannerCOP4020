@@ -37,7 +37,7 @@ public class Scanner{
     public void scanner(){
         Lexeme lexeme;
         lexeme = lex();
-        while(lexeme.type != END){
+        while(lexeme.getType() != END){
             lexeme.display();
             newline();
             lexeme = lex();
