@@ -64,24 +64,24 @@ public class Scanner{
         }while((ch == ' ' || ch == '\t' || ch == '\n') && in.available()); // Loops while whitespace is read and more chars are available
 
         if(!in.available()) // Should check if EOF
-            return new Lexeme(Type.END);
+            return new Lexeme(Type.END, ch);
 
         switch(ch){
             // single character tokens
             case '(':
-                return new Lexeme(Type.OPAREN);
+                return new Lexeme(Type.OPAREN, ch);
             case ')':
-                return new Lexeme(Type.CPAREN);
+                return new Lexeme(Type.CPAREN, ch);
             case ',':
-                return new Lexeme(Type.COMMA);
+                return new Lexeme(Type.COMMA, ch);
             case '+':
-                return new Lexeme(Type.PLUS);
+                return new Lexeme(Type.PLUS, ch);
             case '*':
-                return new Lexeme(Type.TIMES);
+                return new Lexeme(Type.TIMES, ch);
             case '-':
-                return new Lexeme(Type.MINUS);
+                return new Lexeme(Type.MINUS, ch);
             case '/':
-                return new Lexeme(Type.DIVIDES);
+                return new Lexeme(Type.DIVIDES, ch);
             default:
                 // multi-character tokens
                 // (only numbers, variables/keywords, and strings)
@@ -100,6 +100,22 @@ public class Scanner{
                 }
         }
         return new Lexeme(Type.BAD_CHARACTER, ch);
+    }
+
+    public boolean isdigit(char ch){
+        if((int)ch >= 48 && (int)ch <= 57)
+            return true;
+        // If not a digit, return false
+        return false;
+    }
+
+    public boolean isalpha(char ch){
+        if((int)ch >= 65 && (int)ch <= 90) // Uppercase
+            return true;
+        if((int)ch >= 97 && (int)ch <= 122) // Lowercase
+            return true;
+        // If not alpha, return false
+        return false;
     }
 
     public static void confirmArgs(String[] args){
