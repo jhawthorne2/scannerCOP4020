@@ -48,20 +48,24 @@ public class Scanner{
 
     public void scanner(FileInputStream in, FileOutputStream out){
         Lexeme lexeme;
-        lexeme = lex();
+        lexeme = lex(in);
         while(lexeme.getType() != END){
             lexeme.display();
             newline();
-            lexeme = lex();
+            lexeme = lex(in);
         }
     }
 
     public Lexeme lex(FileInputStream in){
         char ch;
-        skipWhiteSpace();
-        ch = Input.getCharacter(in);
-        if(Input.failed())
+
+        do{
+            ch = Input.getCharacter(in);
+        }while((ch == ' ' || ch == '\t' || ch == '\n') && in.available()); // Loops while whitespace is read and more chars are available
+
+        if(!in.available()) // Should check if EOF
             return new Lexeme(Type.END);
+
         switch(ch){
             // single character tokens
             case '(':
