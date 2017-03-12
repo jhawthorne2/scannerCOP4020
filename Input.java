@@ -1,9 +1,6 @@
 import java.io.*;
 
 public class Input{
-    public FileInputStream in;
-    public boolean eof;
-
     public Input(String inputFileName){
         try{
             this.in = new FileInputStream(inputFileName);
