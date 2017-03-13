@@ -1,12 +1,17 @@
 public class Lexeme{
     public Type type;
-    public char ch;
+    public String ch;
 
     public Lexeme(Type type){
         this.type = type;
     }
 
     public Lexeme(Type type, char ch){
+        this.type = type;
+        this.ch = "" + ch;
+    }
+
+    public Lexeme(Type type, String ch){
         this.type = type;
         this.ch = ch;
     }
@@ -15,39 +20,45 @@ public class Lexeme{
         return this.type;
     }
 
-    public char getCh(){
+    public String getCh(){
         return this.ch;
     }
 
     public void display(){
+        System.out.println(getLine());
+    }
+
+    public String getLine(){
         switch(this.type){
             case END:
-                System.out.println("END");
-                break;
+                return "END";
             case OPAREN:
-                System.out.println("OPAREN");
-                break;
+                return "OPAREN";
             case CPAREN:
-                System.out.println("CPAREN");
-                break;
+                return "CPAREN";
             case COMMA:
-                System.out.println("COMMA");
-                break;
+                return "COMMA";
             case PLUS:
-                System.out.println("PLUS");
-                break;
+                return "PLUS";
             case TIMES:
-                System.out.println("TIMES");
-                break;
+                return "TIMES";
             case MINUS:
-                System.out.println("MINUS");
-                break;
+                return "MINUS";
             case DIVIDES:
-                System.out.println("DIVIDES");
-                break;
+                return "DIVIDES";
+            case EQUALS:
+                return "EQUALS";
+            case END_STATEMENT:
+                return "END_STATEMENT";
+            case VARIABLE:
+                return "VARIABLE: " + this.ch;
+            case NUMERIC:
+                return "NUMERIC: " + this.ch;
+            case STRING:
+                return "STRING: " + this.ch;
             case BAD_CHARACTER:
-                System.out.println("BAD CHARACTER: " + this.ch);
-                break;
+                return "BAD CHARACTER: " + this.ch;
         }
+        return "Invalid Lexeme type!";
     }
 }

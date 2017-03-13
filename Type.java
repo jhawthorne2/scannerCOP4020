@@ -7,5 +7,10 @@ public enum Type{
     TIMES,
     MINUS,
     DIVIDES,
+    EQUALS,
+    END_STATEMENT,
+    VARIABLE,
+    NUMERIC,
+    STRING,
     BAD_CHARACTER
 }
