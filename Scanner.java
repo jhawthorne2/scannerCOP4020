@@ -1,4 +1,9 @@
-import java.io.*;
+/*
+ * James Hawthorne and Luke Kledzik
+ * COP4020
+ * Scanner functionality - Scanner(main class)
+ * 3/12/2017
+ */
 import java.util.LinkedList;
 import java.util.List;
 

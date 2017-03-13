@@ -1,3 +1,10 @@
+/*
+ * James Hawthorne and Luke Kledzik
+ * COP4020
+ * Scanner functionality - Lexeme(Lexeme object: Type and contents)
+ * 3/12/2017
+ */
+
 public class Lexeme{
     public Type type;
     public String ch;

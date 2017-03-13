@@ -1,3 +1,9 @@
+/*
+ * James Hawthorne and Luke Kledzik
+ * COP4020
+ * Scanner functionality - Input(file io class)
+ * 3/12/2017
+ */
 import java.io.*;
 
 public class Input{
