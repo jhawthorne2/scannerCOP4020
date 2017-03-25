@@ -18,6 +18,9 @@ BAD CHARACTER
 // Pseudocode from Eddy
 
 public class Parser {
+
+    Lexeme current;
+
     public static void main(String[] args) {
 
     }
@@ -59,5 +62,30 @@ public class Parser {
             expression();
             match(CPAREN);
         }
+    }
+
+    // Parser utility functions
+
+    public static Lexeme advance() {
+        Lexeme old = current;
+
+        // Get the next lexeme in the input stream
+        current = lex();
+
+        return old;
+    }
+
+    public static Lexeme match(Lexeme lexeme) {
+        if(check(lexeme)) {
+            return advance();
+        }
+
+        System.out.println("Parse error: looking for " + lexeme.getLine() + ", found " + current.getLine() + " instead\n");
+
+        return null;
+    }
+
+    public static boolean check(Lexeme lexeme) {
+        return (lexeme.type == current.type)
     }
 }
