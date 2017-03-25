@@ -1,0 +1,64 @@
+NUMERIC: 9.
+
+VARIABLE: Blah 
+
+PLUS
+
+VARIABLE: blah
+
+
+VARIABLE: blah 
+
+EQUALS
+
+NUMERIC: 99
+
+NUMERIC: 15
+
+PLUS
+
+MINUS
+
+NUMERIC: .552
+
+TIMES
+
+OPAREN
+
+VARIABLE: blah 
+
+PLUS
+
+BAD CHARACTER: 5)
+
+NUMERIC: 15
+
+PLUS
+
+MINUS
+
+NUMERIC: .552
+
+TIMES
+
+OPAREN
+
+VARIABLE: blah 
+
+PLUS
+
+NUMERIC: 5
+
+CPAREN
+
+END_STATEMENT
+
+END_STATEMENT
+
+VARIABLE: bob 
+
+EQUALS
+
+STRING: Hello! My name is bob. I say things like "Hello! My name is bob."\\"
+
+END
