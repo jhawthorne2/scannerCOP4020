@@ -25,13 +25,37 @@ public class Parser {
 
     }
 
+    // Parser utility functions
+
+    public static Lexeme advance() {
+        Lexeme old = current;
+
+        // Get the next lexeme in the input stream
+        // CHANGE THIS TO TRAVERSE THROUGH LEXEMELIST
+        current = lex();
+
+        return old;
+    }
+
+    public static Lexeme match(Type type) {
+        if(check(type)) {
+            return advance();
+        }
+
+        System.out.println("Parse error: looking for " + type.typeOf() + ", found " + type.typeOf() + " instead\n");
+
+        return null;
+    }
+
+    public static boolean check(Type type) {
+        return (type == current.type)
+    }
+
     public static void parse() {
         advance();
         expression();
-        match(SEMI);
+        match(END_STATEMENT);
     }
-
-    // Recursive descent parsing functions
 
     public static void expression() {
         unary();
@@ -46,8 +70,8 @@ public class Parser {
     }
 
     public static void unary() {
-        if(check(INTEGER)) {
-            match(INTEGER);
+        if(check(NUMERIC)) {
+            match(NUMERIC);
         }
         else if(check(VARIABLE)) {
             advance();
@@ -57,6 +81,7 @@ public class Parser {
                 match(CPAREN);
             }
         }
+        // Must then be a parenthesized expression
         else {
             match(OPAREN);
             expression();
@@ -64,28 +89,29 @@ public class Parser {
         }
     }
 
-    // Parser utility functions
-
-    public static Lexeme advance() {
-        Lexeme old = current;
-
-        // Get the next lexeme in the input stream
-        current = lex();
-
-        return old;
-    }
-
-    public static Lexeme match(Lexeme lexeme) {
-        if(check(lexeme)) {
-            return advance();
+    public static void optArgumentList() {
+        if(argumentListPending()) {
+            argumentList();
         }
-
-        System.out.println("Parse error: looking for " + lexeme.getLine() + ", found " + current.getLine() + " instead\n");
-
-        return null;
     }
 
-    public static boolean check(Lexeme lexeme) {
-        return (lexeme.type == current.type)
+    public static void argumentList() {
+        expression();
+        if(check()) {
+            match(COMMA);
+            argumentList();
+        }
+    }
+
+    public static boolean operatorPending() {
+        return check(PLUS) || check(MINUS) || check(TIMES) || check(DIVIDES);
+    }
+
+    public static boolean expressionPending() {
+        return unaryPending();
+    }
+
+    public static boolean unaryPending() {
+        return check(NUMERIC) || check(VARIABLE) || check(OPAREN);
     }
 }
