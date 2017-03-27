@@ -44,6 +44,10 @@ public class Scanner{
 
         //close the file stream
         outHandler.closeFile();
+
+        Parser parser = new Parser(lexList);
+        parser.parse();
+
     }
 
 
