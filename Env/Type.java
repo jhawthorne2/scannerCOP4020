@@ -21,5 +21,6 @@ public enum Type{
     STRING,
     BAD_CHARACTER,
     ENV,
-    VALUES
+    VALUES,
+    JOIN
 }
