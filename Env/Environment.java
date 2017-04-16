@@ -13,24 +13,14 @@ public class Environment {
         return lexeme.leftChild;
     }
 
-    // Sets the left child of the lexeme
-    public void setHead(Lexeme lexeme) {
-
-    }
-
     // Returns the right child of the lexeme
     public Lexeme tail(Lexeme lexeme) {
-
-    }
-
-    // Sets the right child of the lexeme
-    public void setTail(Lexeme lexeme) {
-
-    }
+        return lexeme.rightChild;
+    }    
 
     // Returns the left child of the right child of the lexeme
     public Lexeme htail(Lexeme lexeme) {
-
+        return lexeme.rightChild.leftChild;
     }
 
 

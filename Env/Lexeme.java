@@ -25,6 +25,16 @@ public class Lexeme{
         this.ch = ch;
     }
 
+    // Sets the left child of the lexeme
+    public void setHead(Lexeme lexeme) {
+        this.leftChild = lexeme;
+    }
+
+    // Sets the right child of the lexeme
+    public void setTail(Lexeme lexeme) {
+        this.rightChild = lexeme;
+    }
+
     public Type getType(){
         return this.type;
     }
