@@ -3,14 +3,14 @@ public class Environment {
     // Creates a new lexeme with the type, left child, and right child spec.
     public Lexeme join(Type type, Lexeme left, Lexeme right) {
         Lexeme joinedLex = new Lexeme(type);
-        joinedLex.setLeftChild(left);
-        joinedLex.setRightChild(right);
+        joinedLex.leftChild = left;
+        joinedLex.rightChild = right;
         return joinedLex;
     }
 
     // Returns the left child of the lexeme
     public Lexeme head(Lexeme lexeme) {
-
+        return lexeme.leftChild;
     }
 
     // Sets the left child of the lexeme

@@ -25,22 +25,6 @@ public class Lexeme{
         this.ch = ch;
     }
 
-    public void setLeftChild(Lexeme lexeme) {
-        this.leftChild = lexeme;
-    }
-
-    public void setRightChild(Lexeme lexeme) {
-        this.rightChild = lexeme;
-    }
-
-    public Lexeme getLeftChild() {
-        return leftChild;
-    }
-
-    public Lexeme getRightChild() {
-        return rightChild;
-    }
-
     public Type getType(){
         return this.type;
     }
