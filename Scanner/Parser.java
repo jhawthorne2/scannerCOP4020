@@ -24,9 +24,12 @@ import static java.lang.System.exit;
 public class Parser {
 
     Lexeme current;
+    Lexeme old = null;
     List<Lexeme> lexList;
     int currentIndex = 0;
     int listSize;
+
+    Environment environment;
 
     public Parser(List<Lexeme> lexList) {
 
@@ -34,6 +37,7 @@ public class Parser {
         listSize = this.lexList.size();
         this.current = lex();
 
+        this.environment = new Environment();
     }
 
     private Lexeme lex(){
@@ -54,7 +58,7 @@ public class Parser {
         // Get the next lexeme in the input stream
         // CHANGE THIS TO TRAVERSE THROUGH LEXEMELIST
         current = lex();
-
+        this.old = old;
         return old;
     }
 
@@ -80,12 +84,32 @@ public class Parser {
     }
 
     public void parse() {
-        expression();
+        expressionLine();
         if(check(Type.END)){
             match(Type.END);
             return;
         }
         parse();
+    }
+
+    public void displayEnvironment(){
+        this.environment.printEnvironment();
+    }
+
+    public void expressionLine() {
+        unary();
+        if(equalsPending()){
+            Lexeme var = this.old;
+            equals();
+            expression();
+            this.environment.addVariable(var,this.old);
+        }
+        else if(operatorPending()) {
+            operator();
+            expression();
+        }
+        match(Type.END_STATEMENT);
+
     }
 
     public void expression() {
@@ -94,13 +118,14 @@ public class Parser {
             operator();
             expression();
         }
-        else{
-            match(Type.END_STATEMENT);
-        }
     }
 
     public void operator() {
         advance();
+    }
+
+    public Lexeme equals() {
+         return advance();
     }
 
     public void unary() {
@@ -110,6 +135,9 @@ public class Parser {
 
         if(check(Type.NUMERIC)) {
             match(Type.NUMERIC);
+        }
+        else if(check(Type.STRING)){
+            match(Type.STRING);
         }
         else if(check(Type.VARIABLE)) {
             advance();
@@ -147,6 +175,10 @@ public class Parser {
 
     public boolean operatorPending() {
         return check(Type.PLUS) || check(Type.MINUS) || check(Type.TIMES) || check(Type.DIVIDES);
+    }
+
+    public boolean equalsPending() {
+        return check(Type.EQUALS);
     }
 
     public boolean expressionPending() {

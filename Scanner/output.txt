@@ -52,7 +52,9 @@ VARIABLE: blah
 
 PLUS
 
-BAD CHARACTER: 5)
+NUMERIC: 5
+
+CPAREN
 
 END_STATEMENT
 
@@ -78,8 +80,6 @@ CPAREN
 
 END_STATEMENT
 
-END_STATEMENT
-
 VARIABLE: c 
 
 EQUALS
@@ -102,12 +102,12 @@ CPAREN
 
 END_STATEMENT
 
-END_STATEMENT
-
 VARIABLE: bob 
 
 EQUALS
 
 STRING: Hello! My name is bob. I say things like "Hello! My name is bob."\\"
+
+END_STATEMENT
 
 END

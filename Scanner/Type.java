@@ -19,5 +19,8 @@ public enum Type{
     VARIABLE,
     NUMERIC,
     STRING,
-    BAD_CHARACTER
+    BAD_CHARACTER,
+    ENV,
+    VALUES,
+    JOIN
 }

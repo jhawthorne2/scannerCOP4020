@@ -8,6 +8,9 @@
 public class Lexeme{
     public Type type;
     public String ch;
+    public Lexeme leftChild = null;
+    public Lexeme rightChild = null;
+    public Lexeme value = null;
 
     public Lexeme(Type type){
         this.type = type;
@@ -21,6 +24,21 @@ public class Lexeme{
     public Lexeme(Type type, String ch){
         this.type = type;
         this.ch = ch;
+    }
+
+    // Sets the left child of the lexeme
+    public void setHead(Lexeme lexeme) {
+        this.leftChild = lexeme;
+    }
+
+    // Sets the right child of the lexeme
+    public void setTail(Lexeme lexeme) {
+        this.rightChild = lexeme;
+    }
+
+    // Sets the vale of the lexeme
+    public void setValue(Lexeme lexeme) {
+        this.value = lexeme;
     }
 
     public Type getType(){
@@ -67,5 +85,9 @@ public class Lexeme{
                 return "BAD CHARACTER: " + this.ch;
         }
         return "Invalid Lexeme type!";
+    }
+
+    public String toString() {
+        return "Lexeme(type:|" + this.type + "|, value:|" + this.ch + "|)";
     }
 }
