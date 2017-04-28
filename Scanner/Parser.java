@@ -112,46 +112,92 @@ public class Parser {
 
     }
 
-    public void expression() {
-        unary();
+    public Lexeme expression() {
+        Lexeme tree;
+        tree = unary();
         if(operatorPending()) {
-            operator();
-            expression();
+            Lexeme temp;
+            temp = operator();
+            temp.setHead(tree);
+            temp.setTail(expression());
+            tree = temp;
         }
+        return tree;
     }
 
-    public void operator() {
-        advance();
+    public Lexeme operator() {
+        return match(Type.ANYTHING);
     }
 
     public Lexeme equals() {
          return advance();
     }
 
-    public void unary() {
-        if(check(Type.MINUS)){
-            match(Type.MINUS);
+    public Lexeme unary() {
+        Lexeme tree;
+        if(check(Type.VARIABLE)) {
+            tree = match(Type.VARIABLE);
         }
-
-        if(check(Type.NUMERIC)) {
-            match(Type.NUMERIC);
+        else if(check(Type.NUMERIC)) {
+            tree = match(Type.NUMERIC);
         }
-        else if(check(Type.STRING)){
-            match(Type.STRING);
+        else if(check(Type.OPAREN)) {
+            tree = match(Type.OPAREN);
+            tree.setHead(null);
+            tree.setTail(expression());
         }
-        else if(check(Type.VARIABLE)) {
-            advance();
-            if(check(Type.OPAREN)) {
-                advance();
-                optArgumentList();
-                match(Type.CPAREN);
-            }
-        }
-        // Must then be a parenthesized expression
         else {
-            match(Type.OPAREN);
-            expression();
-            match(Type.CPAREN);
+            tree = match(Type.MINUS);
+            tree.type = Type.MINFORK;
+            tree.setHead(null);
+            tree.setTail(unary());
+        }
+        return tree;
+    }
+
+    public void prettyPrint(Lexeme tree) {
+        switch(tree.type) {
+            case Type.NUMBER:
+                System.out.print(tree.getCh());
+                break;
+            case Type.VARIABLE:
+                System.out.print(tree.getCh());
+                break;
+            case Type.STRING:
+                System.out.print("\"" + tree.getCh() + "\"");
+                break;
+            case Type.OPAREN:
+                System.out.print("(");
+                prettyPrint(tree.rightChild);
+                System.out.print(")");
+                break;
+            case Type.MINFORK:
+                System.out.print("-");
+                System.out.print(tree.rightChild.ch);
+                break;
+            case Type.PLUS:
+                prettyPrint(tree.leftChild);
+                System.out.print("+");
+                prettyPrint(tree.rightChild);
+                break;
+            case Type.MINUS:
+                prettyPrint(tree.leftChild);
+                System.out.print("-");
+                prettyPrint(tree.rightChild);
+                break;
+            case Type.DIVIDES:
+                prettyPrint(tree.leftChild);
+                System.out.print("/");
+                prettyPrint(tree.rightChild);
+                break;
+            case Type.TIMES:
+                prettyPrint(tree.leftChild);
+                System.out.print("*");
+                prettyPrint(tree.rightChild);
+                break;
+            default:
+                System.out.print("Bad expression");
+                break;
         }
     }
 

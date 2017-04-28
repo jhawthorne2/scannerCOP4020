@@ -22,5 +22,6 @@ public enum Type{
     BAD_CHARACTER,
     ENV,
     VALUES,
-    JOIN
+    JOIN,
+    MINFORK
 }
