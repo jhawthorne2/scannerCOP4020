@@ -47,6 +47,7 @@ public class Scanner{
 
         Parser parser = new Parser(lexList);
         parser.parse();
+        parser.printThePretty();
         parser.displayEnvironment();
 
     }

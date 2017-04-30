@@ -29,10 +29,13 @@ public class Parser {
     int currentIndex = 0;
     int listSize;
 
+    Lexeme ptree = new Lexeme(Type.PTREE);
+
     Environment environment;
 
     public Parser(List<Lexeme> lexList) {
 
+//        this.ptree.setTail(new Lexeme(Type.END_STATEMENT));
         this.lexList = lexList;
         listSize = this.lexList.size();
         this.current = lex();
@@ -63,7 +66,14 @@ public class Parser {
     }
 
     public Lexeme match(Type type) {
-        if(check(type)) {
+        if(type == Type.ANYTHING){
+            if(check(Type.DIVIDES) || check(Type.MINUS) || check(Type.PLUS) || check(Type.TIMES)){
+                System.out.println("Found " + type + "! Advancing.\n");
+                return advance();
+            }
+
+        }
+        else if(check(type)) {
             System.out.println("Found " + type + "! Advancing.\n");
             return advance();
         }
@@ -84,32 +94,68 @@ public class Parser {
     }
 
     public void parse() {
-        expressionLine();
+        Lexeme tree = new Lexeme(Type.START_STATEMENT);
+        tree.setHead(expressionLine());
         if(check(Type.END)){
-            match(Type.END);
+            tree.setTail(match(Type.END));
+            this.ptree.setTail(tree);
             return;
         }
         parse();
+        tree.setTail(this.ptree.rightChild);
+        this.ptree.setTail(tree);
     }
 
     public void displayEnvironment(){
         this.environment.printEnvironment();
     }
 
-    public void expressionLine() {
-        unary();
+    public Lexeme expressionLine() {
+        Lexeme tree, tmp;
+        tmp = unary();
         if(equalsPending()){
             Lexeme var = this.old;
-            equals();
-            expression();
-            this.environment.addVariable(var,this.old);
+            tree = equals();
+            tree.setHead(tmp);
+            tree.setTail(expression());
+            //this.environment.addVariable(var,this.old);
         }
         else if(operatorPending()) {
-            operator();
-            expression();
+            tree = operator();
+            tree.setHead(tmp);
+            tree.setTail(expression());
+        }
+        else{
+            tree = tmp;
         }
         match(Type.END_STATEMENT);
 
+        return tree;
+    }
+
+    public void printThePretty(){
+
+        //printTree(this.ptree.rightChild.leftChild);
+        //printTree(this.ptree.rightChild);
+        //while(this.ptree)
+
+        Lexeme tmp = this.ptree.rightChild;
+        while(tmp != null){
+            prettyPrint(tmp.leftChild);
+            System.out.println();
+            tmp = tmp.rightChild;
+        }
+
+    }
+
+    private void printTree(Lexeme tree){
+        if(tree != null) {
+            System.out.println("My leftChild:");
+            printTree(tree.leftChild);
+            System.out.println("Me: |" + tree.ch + "| type: |" + tree.type + "|");
+            System.out.println("My rightChild:");
+            printTree(tree.rightChild);
+        }
     }
 
     public Lexeme expression() {
@@ -130,13 +176,21 @@ public class Parser {
     }
 
     public Lexeme equals() {
-         return advance();
+         return match(Type.EQUALS);
     }
 
     public Lexeme unary() {
-        Lexeme tree;
+        Lexeme tree = null;
         if(check(Type.VARIABLE)) {
             tree = match(Type.VARIABLE);
+            if(oparenPending()){
+                advance();
+                tree.setTail(argumentList());
+                if(check(Type.CPAREN)){
+                    advance();
+                    tree.type = Type.FUNC_CALL;
+                }
+            }
         }
         else if(check(Type.NUMERIC)) {
             tree = match(Type.NUMERIC);
@@ -145,54 +199,81 @@ public class Parser {
             tree = match(Type.OPAREN);
             tree.setHead(null);
             tree.setTail(expression());
+            tree = match(Type.CPAREN);
+
         }
-        else {
+        else if(check(Type.MINUS)){
             tree = match(Type.MINUS);
             tree.type = Type.MINFORK;
             tree.setHead(null);
             tree.setTail(unary());
+        }
+        else if(check(Type.STRING)){
+            tree = match(Type.STRING);
         }
         return tree;
     }
 
     public void prettyPrint(Lexeme tree) {
         switch(tree.type) {
-            case Type.NUMBER:
+            case NUMERIC:
                 System.out.print(tree.getCh());
                 break;
-            case Type.VARIABLE:
+            case VARIABLE:
                 System.out.print(tree.getCh());
+                if(tree.rightChild != null) {
+                    if (tree.rightChild.type == Type.VARIABLE) {
+                        System.out.print(" , ");
+                        prettyPrint(tree.rightChild);
+                    }
+                }
                 break;
-            case Type.STRING:
+            case STRING:
                 System.out.print("\"" + tree.getCh() + "\"");
                 break;
-            case Type.OPAREN:
-                System.out.print("(");
-                prettyPrint(tree.rightChild);
-                System.out.print(")");
+            case FUNC_CALL:
+                //System.out.println("got a func call");
+                System.out.print(tree.getCh());
+                System.out.print(" ( ");
+                if(tree.rightChild != null) {
+                    if (tree.rightChild.type == Type.VARIABLE) {
+                        prettyPrint(tree.rightChild);
+                    }
+                }
+                System.out.print(" )");
                 break;
-            case Type.MINFORK:
+            case OPAREN:
+                System.out.print("( ");
+                prettyPrint(tree.rightChild);
+                System.out.print(" )");
+                break;
+            case MINFORK:
                 System.out.print("-");
                 System.out.print(tree.rightChild.ch);
                 break;
-            case Type.PLUS:
+            case PLUS:
                 prettyPrint(tree.leftChild);
-                System.out.print("+");
+                System.out.print(" + ");
                 prettyPrint(tree.rightChild);
                 break;
-            case Type.MINUS:
+            case MINUS:
                 prettyPrint(tree.leftChild);
-                System.out.print("-");
+                System.out.print(" - ");
                 prettyPrint(tree.rightChild);
                 break;
-            case Type.DIVIDES:
+            case DIVIDES:
                 prettyPrint(tree.leftChild);
-                System.out.print("/");
+                System.out.print(" / ");
                 prettyPrint(tree.rightChild);
                 break;
-            case Type.TIMES:
+            case TIMES:
                 prettyPrint(tree.leftChild);
-                System.out.print("*");
+                System.out.print(" * ");
+                prettyPrint(tree.rightChild);
+                break;
+            case EQUALS:
+                prettyPrint(tree.leftChild);
+                System.out.print(" = ");
                 prettyPrint(tree.rightChild);
                 break;
             default:
@@ -211,16 +292,22 @@ public class Parser {
         return check(Type.VARIABLE) || check(Type.NUMERIC) || check(Type.STRING);
     }
 
-    public void argumentList() {
-        if(argumentListPending()) advance();
+    public Lexeme argumentList() {
+        Lexeme tree = null;
+        if(argumentListPending()) tree = advance();
         if(check(Type.COMMA)) {
             match(Type.COMMA);
-            argumentList();
+            tree.setTail(argumentList());
         }
+        return tree;
     }
 
     public boolean operatorPending() {
         return check(Type.PLUS) || check(Type.MINUS) || check(Type.TIMES) || check(Type.DIVIDES);
+    }
+
+    public boolean oparenPending() {
+        return check(Type.OPAREN);
     }
 
     public boolean equalsPending() {

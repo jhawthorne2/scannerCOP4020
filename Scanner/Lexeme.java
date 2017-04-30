@@ -23,6 +23,11 @@ public class Lexeme{
 
     public Lexeme(Type type, String ch){
         this.type = type;
+        if(type != Type.STRING){
+            ch = ch.replace("\r", "");
+            ch = ch.replace(" ", "");
+            ch = ch.replace("\t", "");
+        }
         this.ch = ch;
     }
 

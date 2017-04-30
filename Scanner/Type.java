@@ -16,12 +16,16 @@ public enum Type{
     DIVIDES,
     EQUALS,
     END_STATEMENT,
+    START_STATEMENT,
     VARIABLE,
     NUMERIC,
     STRING,
     BAD_CHARACTER,
     ENV,
+    PTREE,
     VALUES,
     JOIN,
-    MINFORK
+    MINFORK,
+    ANYTHING,
+    FUNC_CALL
 }
